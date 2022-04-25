@@ -55,10 +55,12 @@ public class PaylaterDetailService{
         detail.setHandlingFee(paylaterDetail.getQuantity()* paylaterDetail.getPrice()*0.11);
         detail.setQuantity(paylaterDetail.getQuantity());
         detail.setTransactionAmount((paylaterDetail.getQuantity()* paylaterDetail.getPrice()) + detail.getHandlingFee());
+        detail.setInstallmentPay(detail.getTransactionAmount()/saveInstallment.getTotalInstallment());
 
         paylaterDetailRepository.save(detail);
 
         paylaterDetail.setId(product.getId());
+        paylaterDetail.setInstallmentPay(detail.getInstallmentPay());
 
         return paylaterDetail;
     }

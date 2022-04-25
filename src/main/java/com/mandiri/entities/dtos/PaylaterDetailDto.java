@@ -20,8 +20,9 @@ public class PaylaterDetailDto {
     private String status;
     @JsonFormat(pattern = "dd MMMM yyyy HH:mm:ss")
     private Date dueDate;
+    private Double installmentPay;
 
-    public PaylaterDetailDto(String id, Double transactionAmount, Double handlingFee, Integer currentInstallment, Date createdTime, String productName, Integer totalInstallment, Double price,  String status, Date dueDate, Integer totalProduct) {
+    public PaylaterDetailDto(String id, Double transactionAmount, Double handlingFee, Integer currentInstallment, Date createdTime, String productName, Integer totalInstallment, Double price,  String status, Date dueDate, Integer totalProduct, Double installmentPay) {
         this.id = id;
         this.handlingFee = handlingFee;
         this.createdTime = createdTime;
@@ -33,6 +34,7 @@ public class PaylaterDetailDto {
         this.status = status;
         this.dueDate = dueDate;
         this.totalProduct = totalProduct;
+        this.installmentPay = installmentPay;
     }
     public PaylaterDetailDto(){
 

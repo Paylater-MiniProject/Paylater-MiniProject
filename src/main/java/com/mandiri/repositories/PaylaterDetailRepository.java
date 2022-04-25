@@ -15,7 +15,7 @@ public interface PaylaterDetailRepository extends JpaRepository<PaylaterDetail, 
 
     @Query(value ="SELECT new com.mandiri.entities.dtos.PaylaterDetailDto (t.id, t.transactionAmount, t.handlingFee, i.currentInstallment, " +
             "t.createdTime, p.name as productName, i.totalInstallment, " +
-            "p.price, i.status, i.dueDate, t.quantity) FROM PaylaterDetail t " +
+            "p.price, i.status, i.dueDate, t.quantity, t.installmentPay) FROM PaylaterDetail t " +
             "JOIN t.product p JOIN t.installment i " +
             "WHERE t.id = (:id)", nativeQuery = false)
     PaylaterDetailDto findAllDetailById(@Param("id") String id);

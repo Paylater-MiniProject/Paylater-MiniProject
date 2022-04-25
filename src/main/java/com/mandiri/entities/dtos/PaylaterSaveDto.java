@@ -9,4 +9,5 @@ public class PaylaterSaveDto {
     private Integer totalInstallment;
     private Double price;
     private Integer quantity;
+    private Double installmentPay;
 }
