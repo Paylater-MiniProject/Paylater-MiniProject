@@ -5,6 +5,8 @@ import com.mandiri.repositories.InstallmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class InstallmentService {
     @Autowired
@@ -12,5 +14,9 @@ public class InstallmentService {
 
     public Installment saveInstallment(Installment installment){
         return installmentRepository.save(installment);
+    }
+
+    public Installment getById(String id){
+        return installmentRepository.findById(id).get();
     }
 }

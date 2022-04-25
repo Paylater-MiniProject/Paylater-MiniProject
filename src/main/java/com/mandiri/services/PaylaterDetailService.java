@@ -1,13 +1,18 @@
 package com.mandiri.services;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mandiri.constant.ResponseMessage;
 import com.mandiri.entities.dtos.PaylaterDetailDto;
 import com.mandiri.entities.dtos.PaylaterSaveDto;
+import com.mandiri.entities.dtos.PaymentPerMonthDto;
 import com.mandiri.entities.models.Installment;
 import com.mandiri.entities.models.PaylaterDetail;
 import com.mandiri.entities.models.Product;
 import com.mandiri.repositories.PaylaterDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -63,5 +68,37 @@ public class PaylaterDetailService{
         paylaterDetail.setInstallmentPay(detail.getInstallmentPay());
 
         return paylaterDetail;
+    }
+
+    public PaylaterDetailDto update(PaymentPerMonthDto perMonthDto){
+        String id = perMonthDto.getId();
+        paylaterValidation(id);
+        PaylaterDetailDto detailDto = paylaterDetailRepository.findAllDetailById(id);
+
+        Installment installment = installmentService.getById(id);
+        installment.setId(id);
+        if(perMonthDto.getInstallmentPay().equals(detailDto.getInstallmentPay())){
+            installment.setCurrentInstallment(installment.getCurrentInstallment() + 1);
+        } else{
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Payment tidak sesuai");
+        }
+
+        Integer paidOffTotal = installment.getCurrentInstallment();
+        if(paidOffTotal == installment.getTotalInstallment())
+            installment.setStatus("Lunas");
+        else
+            installment.setStatus("Belum Lunas");
+
+        installmentService.saveInstallment(installment);
+        detailDto.setCurrentInstallment(installment.getCurrentInstallment());
+
+        return detailDto;
+    }
+
+    private void paylaterValidation(String id) {
+        if(!paylaterDetailRepository.existsById(id)){
+            throw  new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    ResponseMessage.getResourceNotFound(PaylaterDetail.class.getSimpleName(), id));
+        }
     }
 }
