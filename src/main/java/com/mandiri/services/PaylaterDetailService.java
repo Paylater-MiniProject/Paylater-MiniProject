@@ -77,22 +77,31 @@ public class PaylaterDetailService{
 
         Installment installment = installmentService.getById(id);
         installment.setId(id);
+
+        paidOffValidation(installment);
+
         if(perMonthDto.getInstallmentPay().equals(detailDto.getInstallmentPay())){
             installment.setCurrentInstallment(installment.getCurrentInstallment() + 1);
         } else{
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Payment tidak sesuai");
         }
 
-        Integer paidOffTotal = installment.getCurrentInstallment();
-        if(paidOffTotal == installment.getTotalInstallment())
-            installment.setStatus("Lunas");
-        else
-            installment.setStatus("Belum Lunas");
-
         installmentService.saveInstallment(installment);
         detailDto.setCurrentInstallment(installment.getCurrentInstallment());
 
         return detailDto;
+    }
+
+    private void paidOffValidation(Installment installment) {
+        Integer paidOffTotal = installment.getCurrentInstallment();
+
+        if(paidOffTotal.equals(installment.getTotalInstallment()))
+            installment.setStatus("Lunas");
+        if(paidOffTotal > installment.getTotalInstallment()){
+            throw new ResponseStatusException(HttpStatus.ACCEPTED, "SUDAH LUNAS");
+        }
+        else
+            installment.setStatus("Belum Lunas");
     }
 
     private void paylaterValidation(String id) {
