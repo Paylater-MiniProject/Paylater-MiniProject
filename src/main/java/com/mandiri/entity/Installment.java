@@ -20,5 +20,6 @@ public class Installment {
     private Integer totalInstallment;
     private String status;
     private Date dueDate;
+    private Integer period;
 
 }
