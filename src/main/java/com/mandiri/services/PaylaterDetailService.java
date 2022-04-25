@@ -1,6 +1,7 @@
 package com.mandiri.services;
 
 import com.mandiri.entities.dtos.PaylaterDetailDto;
+import com.mandiri.entities.dtos.PaylaterSaveDto;
 import com.mandiri.entities.models.Installment;
 import com.mandiri.entities.models.PaylaterDetail;
 import com.mandiri.entities.models.Product;
@@ -8,6 +9,7 @@ import com.mandiri.repositories.PaylaterDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Service
@@ -25,12 +27,18 @@ public class PaylaterDetailService{
         return paylaterDetailRepository.findAllDetailById(id);
     }
 
-    public PaylaterDetailDto savePayment(PaylaterDetailDto paylaterDetail) {
+    public PaylaterSaveDto savePayment(PaylaterSaveDto paylaterDetail) {
         Installment saveInstallment = new Installment();
         saveInstallment.setTotalInstallment(paylaterDetail.getTotalInstallment());
-        saveInstallment.setPeriod(paylaterDetail.getPeriod());
+        saveInstallment.setCurrentInstallment(0);
         saveInstallment.setStatus("Belum Lunas");
-        saveInstallment.setDueDate(new Date());
+
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MONTH, saveInstallment.getTotalInstallment());
+
+        saveInstallment.setDueDate(cal.getTime());
 
         Installment installment = installmentService.saveInstallment(saveInstallment);
 
@@ -44,9 +52,9 @@ public class PaylaterDetailService{
         PaylaterDetail detail = new PaylaterDetail();
         detail.setId(product.getId());
         detail.setCreatedTime(new Date(System.currentTimeMillis()));
-        detail.setHandlingFee(paylaterDetail.getHandlingFee());
-        detail.setTotalProduct(paylaterDetail.getTotalProduct());
-        detail.setTransactionAmount(paylaterDetail.getTransactionAmount());
+        detail.setHandlingFee(paylaterDetail.getQuantity()* paylaterDetail.getPrice()*0.11);
+        detail.setQuantity(paylaterDetail.getQuantity());
+        detail.setTransactionAmount((paylaterDetail.getQuantity()* paylaterDetail.getPrice()) + detail.getHandlingFee());
 
         paylaterDetailRepository.save(detail);
 

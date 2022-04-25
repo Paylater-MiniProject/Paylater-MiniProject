@@ -11,8 +11,7 @@ public class Product {
     @Id
     private String id;
     private String name;
-    private Integer price;
-    private Integer stock;
+    private Double price;
 
     @OneToOne(mappedBy = "product")
     private PaylaterDetail paylaterDetail;

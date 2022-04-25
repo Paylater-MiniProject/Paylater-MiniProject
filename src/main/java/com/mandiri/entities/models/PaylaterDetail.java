@@ -11,10 +11,10 @@ import java.util.Date;
 public class PaylaterDetail {
     @Id
     private String id;
-    private Integer totalProduct;
-    private Integer handlingFee;
+    private Integer quantity;
+    private Double handlingFee;
     private Date createdTime;
-    private Integer transactionAmount;
+    private Double transactionAmount;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id")

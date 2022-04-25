@@ -1,5 +1,6 @@
 package com.mandiri.entities.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -8,22 +9,24 @@ import java.util.Date;
 public class PaylaterDetailDto {
     private String id;
     private Integer totalProduct;
-    private Integer handlingFee;
+    private Double handlingFee;
+    @JsonFormat(pattern = "dd MMMM yyyy HH:mm:ss")
     private Date createdTime;
-    private Integer transactionAmount;
-    private Integer period;
+    private Double transactionAmount;
+    private Integer currentInstallment;
     private String productName;
     private Integer totalInstallment;
-    private Integer price;
+    private Double price;
     private String status;
+    @JsonFormat(pattern = "dd MMMM yyyy HH:mm:ss")
     private Date dueDate;
 
-    public PaylaterDetailDto(String id,Integer transactionAmount, Integer handlingFee, Integer period, Date createdTime, String productName, Integer totalInstallment, Integer price,  String status, Date dueDate, Integer totalProduct) {
+    public PaylaterDetailDto(String id, Double transactionAmount, Double handlingFee, Integer currentInstallment, Date createdTime, String productName, Integer totalInstallment, Double price,  String status, Date dueDate, Integer totalProduct) {
         this.id = id;
         this.handlingFee = handlingFee;
         this.createdTime = createdTime;
         this.transactionAmount = transactionAmount;
-        this.period = period;
+        this.currentInstallment = currentInstallment;
         this.productName = productName;
         this.totalInstallment = totalInstallment;
         this.price = price;
