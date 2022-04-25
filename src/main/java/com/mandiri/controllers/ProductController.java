@@ -1,7 +1,7 @@
-package com.mandiri.controller;
+package com.mandiri.controllers;
 
-import com.mandiri.entity.Product;
-import com.mandiri.service.ProductService;
+import com.mandiri.entities.models.Product;
+import com.mandiri.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,10 +1,9 @@
-package com.mandiri.controller;
+package com.mandiri.controllers;
 
-import com.mandiri.entity.Employee;
+import com.mandiri.entities.models.Employee;
 import com.mandiri.generator.PDFGenerator;
-import com.mandiri.service.EmployeeService;
+import com.mandiri.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -1,6 +1,6 @@
-package com.mandiri.repository;
+package com.mandiri.repositories;
 
-import com.mandiri.entity.FileUpload;
+import com.mandiri.entities.models.FileUpload;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

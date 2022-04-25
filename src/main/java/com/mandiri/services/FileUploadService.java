@@ -1,12 +1,9 @@
-package com.mandiri.service;
+package com.mandiri.services;
 
 import com.lowagie.text.*;
-import com.lowagie.text.pdf.PdfDocument;
-import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
-import com.lowagie.text.pdf.parser.PdfTextExtractor;
-import com.mandiri.entity.FileUpload;
-import com.mandiri.repository.FileUploadRepository;
+import com.mandiri.entities.models.FileUpload;
+import com.mandiri.repositories.FileUploadRepository;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,10 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.lang.annotation.Documented;
 import java.util.ArrayList;
 import java.util.List;
 

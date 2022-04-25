@@ -1,12 +1,9 @@
-package com.mandiri.entity;
+package com.mandiri.entities.models;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -21,5 +18,8 @@ public class Installment {
     private String status;
     private Date dueDate;
     private Integer period;
+
+    @OneToOne(mappedBy = "installment")
+    private PaylaterDetail paylaterDetail;
 
 }

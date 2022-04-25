@@ -7,11 +7,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import com.itextpdf.text.pdf.PdfReader;
-import com.lowagie.text.PageSize;
-import com.mandiri.entity.Employee;
-import com.mandiri.repository.EmployeeRepository;
-import com.mandiri.service.EmployeeService;
+import com.mandiri.entities.models.Employee;
+import com.mandiri.repositories.EmployeeRepository;
+import com.mandiri.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

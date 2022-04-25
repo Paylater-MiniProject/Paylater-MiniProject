@@ -1,4 +1,4 @@
-package com.mandiri.entity;
+package com.mandiri.entities.models;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,16 +10,21 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "mst_upload")
-@Getter
+@Table(name = "mst_employee")
 @Setter
-public class FileUpload {
+@Getter
+public class Employee {
 
     @Id
     @GeneratedValue(generator = "uuid-generator")
     @GenericGenerator(name = "uuid-generator", strategy = "uuid")
-    private String id;
-    private String fileName;
-    private String fileExtension;
+    private String empId;
+    private String empName;
+    private Double empSal;
+    private String empDept;
+
+    public Employee(){
+
+    }
 
 }

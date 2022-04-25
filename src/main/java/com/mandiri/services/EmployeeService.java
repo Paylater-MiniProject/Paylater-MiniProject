@@ -1,7 +1,7 @@
-package com.mandiri.service;
+package com.mandiri.services;
 
-import com.mandiri.entity.Employee;
-import com.mandiri.repository.EmployeeRepository;
+import com.mandiri.entities.models.Employee;
+import com.mandiri.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

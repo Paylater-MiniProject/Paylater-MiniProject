@@ -1,6 +1,5 @@
-package com.mandiri.entity;
+package com.mandiri.entities.models;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -11,14 +10,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "mst_product")
-@Data
-public class Product {
+@Table(name = "mst_upload")
+@Getter
+@Setter
+public class FileUpload {
+
     @Id
     @GeneratedValue(generator = "uuid-generator")
     @GenericGenerator(name = "uuid-generator", strategy = "uuid")
     private String id;
-    private String name;
-    private Integer price;
-    private Integer stock;
+    private String fileName;
+    private String fileExtension;
+
 }

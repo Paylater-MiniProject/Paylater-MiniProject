@@ -1,7 +1,6 @@
-package com.mandiri.repository;
+package com.mandiri.repositories;
 
-import com.mandiri.entity.Employee;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.mandiri.entities.models.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
