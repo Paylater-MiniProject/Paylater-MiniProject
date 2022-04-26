@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -32,6 +33,7 @@ public class PaylaterDetailService{
         return paylaterDetailRepository.findAllDetailById(id);
     }
 
+    @Transactional
     public PaylaterSaveDto savePayment(PaylaterSaveDto paylaterDetail) {
         Installment saveInstallment = new Installment();
         saveInstallment.setTotalInstallment(paylaterDetail.getTotalInstallment());
@@ -70,6 +72,7 @@ public class PaylaterDetailService{
         return paylaterDetail;
     }
 
+    @Transactional
     public PaylaterDetailDto update(PaymentPerMonthDto perMonthDto){
         String id = perMonthDto.getId();
         paylaterValidation(id);
