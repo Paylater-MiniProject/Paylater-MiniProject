@@ -4,10 +4,13 @@ import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.IDN;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Currency;
 import java.util.List;
+import java.util.Locale;
 
 import com.mandiri.entities.dtos.PaylaterDetailDto;
 import com.mandiri.entities.models.Employee;
@@ -30,6 +33,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.yaml.snakeyaml.events.Event;
 
 import javax.swing.plaf.synth.ColorType;
 
@@ -47,6 +51,9 @@ public class PDFGenerator{
 
     @Value("${logoImgPath}")
     private String logoImgPath;
+
+    @Value("${logoImgPath2}")
+    private String logoImgPath2;
 
     @Value("${logoFooter}")
     private String logoFooter;
@@ -71,16 +78,17 @@ public class PDFGenerator{
     private static Font COURIER_SMALL = new Font(Font.FontFamily.COURIER, 12, Font.NORMAL);
     private static Font COURIER_SMALL_FOOTER = new Font(Font.FontFamily.COURIER, 8, Font.BOLD);
 
-    public void generatePdfReport(String id) {
+    public void generatePdfReport(String id,String imageName) {
 
         Document document = new Document();
 
         try {
-            PdfWriter.getInstance(document, new FileOutputStream(getPdfNameWithDate()));
+            PdfWriter.getInstance(document, new FileOutputStream(getPdfNameWithDate(id)));
             document.open();
-            addLogo(document);
+            addLogo(document,imageName);
             addDocTitle(document,id);
             createTable(document,noOfColumns,id);
+            addParagraph(document);
             addFooter(document);
             document.close();
             System.out.println("------------------Your PDF Report is ready!-------------------------");
@@ -92,11 +100,25 @@ public class PDFGenerator{
 
     }
 
-    private void addLogo(Document document) {
+    private void addLogo(Document document,String imageName) {
+        System.out.println(imageName);
         try {
             Image img = Image.getInstance(logoImgPath);
+            if (imageName != null){
+                Image img2 = Image.getInstance("D:/"+imageName+".png");
+                img2.scalePercent(3, 5);
+                img2.setAlignment(Element.ALIGN_CENTER);
+                document.add(img2);
+            }else{
+                Image img2 = Image.getInstance(logoImgPath2);
+                img2.scalePercent(3, 5);
+                img2.setAlignment(Element.ALIGN_CENTER);
+                document.add(img2);
+            }
+
             img.scalePercent(logoImgScale[0], logoImgScale[1]);
             img.setAlignment(Element.ALIGN_RIGHT);
+
             document.add(img);
         } catch (DocumentException | IOException e) {
             // TODO Auto-generated catch block
@@ -113,11 +135,11 @@ public class PDFGenerator{
         leaveEmptyLine(p1, 1);
 
 
-        p1.add(new Paragraph("Name           : " + "Asep Julianta", COURIER_SMALL));
+        p1.add(new Paragraph("Name" , COURIER_SMALL));
         leaveEmptyLine(p1, 1);
-        p1.add(new Paragraph("Address        : " + "Jl.Kemanggisan no.90", COURIER_SMALL));
+        p1.add(new Paragraph("Address" , COURIER_SMALL));
         leaveEmptyLine(p1, 1);
-        p1.add(new Paragraph("Transaction id : " + paylaterDetail.getId(), COURIER_SMALL));
+        p1.add(new Paragraph("Transaction id", COURIER_SMALL));
 
 
         document.add(title);
@@ -163,13 +185,38 @@ public class PDFGenerator{
         table.addCell("Status Pembayaran");
         table.addCell(paylaterDetailDto.getStatus());
         table.addCell("Harga Product");
-        table.addCell(paylaterDetailDto.getPrice().toString());
+        table.addCell(NumberFormat.getCurrencyInstance(new Locale("in","ID")).format(paylaterDetailDto.getPrice().intValue()));
         table.addCell("Qty");
         table.addCell(paylaterDetailDto.getTotalProduct().toString());
         table.addCell("Biaya Admin");
-        table.addCell(paylaterDetailDto.getHandlingFee().toString());
+        table.addCell(NumberFormat.getCurrencyInstance(new Locale("in","ID")).format(paylaterDetailDto.getHandlingFee().intValue()));
         table.addCell("Total Pembayaran");
-        table.addCell(paylaterDetailDto.getTransactionAmount().toString());
+        table.addCell(NumberFormat.getCurrencyInstance(new Locale("in","ID")).format(paylaterDetailDto.getTransactionAmount()));
+
+
+    }
+
+    private void addParagraph(Document document) throws DocumentException {
+
+        Paragraph p1 = new Paragraph();
+        leaveEmptyLine(p1, 1);
+
+
+        p1.add(new Paragraph("Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
+                "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a " +
+                "galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into " +
+                "electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset " +
+                "sheets containing Lorem Ipsum passages, " +
+                "and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." , COURIER_SMALL));
+        leaveEmptyLine(p1, 1);
+        p1.add(new Paragraph("Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
+                "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a " +
+                "galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into "
+                 , COURIER_SMALL));
+
+        leaveEmptyLine(p1, 1);
+
+        document.add(p1);
 
 
     }
@@ -200,9 +247,9 @@ public class PDFGenerator{
         }
     }
 
-    private String getPdfNameWithDate() {
+    private String getPdfNameWithDate(String id) {
         String localDateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(reportFileNameDateFormat));
-        return pdfDir+reportFileName+"-"+localDateString+".pdf";
+        return pdfDir+id+"-"+localDateString+".pdf";
     }
 
 }

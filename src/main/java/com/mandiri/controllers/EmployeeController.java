@@ -25,8 +25,5 @@ public class EmployeeController {
         return employeeService.getEmployee(id);
     }
 
-    @GetMapping("/{id}/export")
-    public void getEmployeePdf(@PathVariable String id){
-        pdfGenerator.generatePdfReport(id);
-    }
+
 }

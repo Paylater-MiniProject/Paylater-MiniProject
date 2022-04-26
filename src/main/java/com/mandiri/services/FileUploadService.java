@@ -30,6 +30,7 @@ public class FileUploadService {
         FileUpload file = new FileUpload();
         List<String> allowedExtension = new ArrayList<>();
         allowedExtension.add("pdf");
+        allowedExtension.add("png");
 
         String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
 
