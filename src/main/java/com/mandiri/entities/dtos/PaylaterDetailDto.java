@@ -10,7 +10,7 @@ public class PaylaterDetailDto {
     private String id;
     private Integer totalProduct;
     private Double handlingFee;
-    @JsonFormat(pattern = "dd MMMM yyyy HH:mm:ss")
+    @JsonFormat(pattern = "dd-MMMM-yyyy")
     private Date createdTime;
     private Double transactionAmount;
     private Integer currentInstallment;
@@ -18,7 +18,7 @@ public class PaylaterDetailDto {
     private Integer totalInstallment;
     private Double price;
     private String status;
-    @JsonFormat(pattern = "dd MMMM yyyy HH:mm:ss")
+    @JsonFormat(pattern = "dd-MMMM-yyyy")
     private Date dueDate;
     private Double installmentPay;
 
