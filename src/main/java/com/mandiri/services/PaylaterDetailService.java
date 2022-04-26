@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -32,37 +33,14 @@ public class PaylaterDetailService{
         return paylaterDetailRepository.findAllDetailById(id);
     }
 
+    @Transactional
     public PaylaterSaveDto savePayment(PaylaterSaveDto paylaterDetail) {
-        Installment saveInstallment = new Installment();
-        saveInstallment.setTotalInstallment(paylaterDetail.getTotalInstallment());
-        saveInstallment.setCurrentInstallment(0);
-        saveInstallment.setStatus("Belum Lunas");
-
-        Date date = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.MONTH, saveInstallment.getTotalInstallment());
-
-        saveInstallment.setDueDate(cal.getTime());
-
+        Installment saveInstallment = toSaveInstallmentClass(paylaterDetail);
         Installment installment = installmentService.saveInstallment(saveInstallment);
 
-        Product saveProduct = new Product();
-        saveProduct.setId(installment.getId());
-        saveProduct.setName(paylaterDetail.getProductName());
-        saveProduct.setPrice(paylaterDetail.getPrice());
+        Product product = toSaveProductClass(paylaterDetail, installment);
 
-        Product product = productService.addProduct(saveProduct);
-
-        PaylaterDetail detail = new PaylaterDetail();
-        detail.setId(product.getId());
-        detail.setCreatedTime(new Date(System.currentTimeMillis()));
-        detail.setHandlingFee(paylaterDetail.getQuantity()* paylaterDetail.getPrice()*0.11);
-        detail.setQuantity(paylaterDetail.getQuantity());
-        detail.setTransactionAmount((paylaterDetail.getQuantity()* paylaterDetail.getPrice()) + detail.getHandlingFee());
-        detail.setInstallmentPay(detail.getTransactionAmount()/saveInstallment.getTotalInstallment());
-
-        paylaterDetailRepository.save(detail);
+        PaylaterDetail detail = toSavePaylaterDetailClass(paylaterDetail, saveInstallment, product);
 
         paylaterDetail.setId(product.getId());
         paylaterDetail.setInstallmentPay(detail.getInstallmentPay());
@@ -70,6 +48,46 @@ public class PaylaterDetailService{
         return paylaterDetail;
     }
 
+    private PaylaterDetail toSavePaylaterDetailClass(PaylaterSaveDto paylaterDetail, Installment saveInstallment, Product product) {
+        PaylaterDetail detail = new PaylaterDetail();
+        detail.setId(product.getId());
+        detail.setCreatedTime(new Date(System.currentTimeMillis()));
+        detail.setHandlingFee(paylaterDetail.getQuantity()* paylaterDetail.getPrice()*0.11);
+        detail.setQuantity(paylaterDetail.getQuantity());
+        detail.setTransactionAmount((paylaterDetail.getQuantity()* paylaterDetail.getPrice()) + detail.getHandlingFee());
+        detail.setInstallmentPay(detail.getTransactionAmount()/ saveInstallment.getTotalInstallment());
+
+        paylaterDetailRepository.save(detail);
+        return detail;
+    }
+
+    private Product toSaveProductClass(PaylaterSaveDto paylaterDetail, Installment installment) {
+        Product saveProduct = new Product();
+        saveProduct.setId(installment.getId());
+        saveProduct.setName(paylaterDetail.getProductName());
+        saveProduct.setPrice(paylaterDetail.getPrice());
+
+        Product product = productService.addProduct(saveProduct);
+        return product;
+    }
+
+    private Installment toSaveInstallmentClass(PaylaterSaveDto paylaterDetail) {
+        Installment saveInstallment = new Installment();
+        saveInstallment.setTotalInstallment(paylaterDetail.getTotalInstallment());
+        saveInstallment.setCurrentInstallment(1);
+        saveInstallment.setStatus("Belum Lunas");
+        saveInstallment.setIsDone(false);
+
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MONTH, saveInstallment.getTotalInstallment());
+
+        saveInstallment.setDueDate(cal.getTime());
+        return saveInstallment;
+    }
+
+    @Transactional
     public PaylaterDetailDto update(PaymentPerMonthDto perMonthDto){
         String id = perMonthDto.getId();
         paylaterValidation(id);
@@ -78,14 +96,11 @@ public class PaylaterDetailService{
         Installment installment = installmentService.getById(id);
         installment.setId(id);
 
-        paidOffValidation(installment);
-
         if(perMonthDto.getInstallmentPay().equals(detailDto.getInstallmentPay())){
-            installment.setCurrentInstallment(installment.getCurrentInstallment() + 1);
+            paidOffValidation(installment);
         } else{
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Payment tidak sesuai");
         }
-
         installmentService.saveInstallment(installment);
         detailDto.setCurrentInstallment(installment.getCurrentInstallment());
 
@@ -95,13 +110,17 @@ public class PaylaterDetailService{
     private void paidOffValidation(Installment installment) {
         Integer paidOffTotal = installment.getCurrentInstallment();
 
-        if(paidOffTotal.equals(installment.getTotalInstallment()))
+        if(paidOffTotal.equals(installment.getTotalInstallment())){
             installment.setStatus("Lunas");
-        if(paidOffTotal > installment.getTotalInstallment()){
+            installment.setIsDone(true);
+        }
+        if(installment.getIsDone().equals(true)){
             throw new ResponseStatusException(HttpStatus.ACCEPTED, "SUDAH LUNAS");
         }
-        else
+        else{
             installment.setStatus("Belum Lunas");
+            installment.setCurrentInstallment(installment.getCurrentInstallment() + 1);
+        }
     }
 
     private void paylaterValidation(String id) {

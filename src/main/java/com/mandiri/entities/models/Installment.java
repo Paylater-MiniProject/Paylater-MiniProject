@@ -18,6 +18,7 @@ public class Installment {
     private String status;
     private Date dueDate;
     private Integer currentInstallment;
+    private Boolean isDone;
 
     @OneToOne(mappedBy = "installment")
     private PaylaterDetail paylaterDetail;
