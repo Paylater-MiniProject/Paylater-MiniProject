@@ -61,7 +61,4 @@ public class FileUploadService {
         document.close();
     }
 
-    public void getReader(String file) {
-
-    }
 }
