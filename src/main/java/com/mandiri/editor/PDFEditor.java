@@ -17,10 +17,14 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PDFEditor {
+
+    @Value("${pdfDir}")
+    private String pdfDir;
 
     @Autowired
     PaylaterDetailService paylaterDetailService;
@@ -32,7 +36,7 @@ public class PDFEditor {
         paylaterDetailService.getAllPaymentById(id);
 
         PDDocument document = null;
-        document = PDDocument.load(new File("C:/Users/fajri/upload-image/"+fileName+".pdf"));
+        document = PDDocument.load(new File(pdfDir+fileName+".pdf"));
         document = replaceText(document, "Name", "Name              : " + name);
         document = replaceText(document, "Address", "Address           : "+ address);
         document = replaceText(document, "Transaction id", "TransactionId     : "+ id);
