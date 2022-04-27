@@ -1,25 +1,19 @@
 package com.mandiri.generator;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.IDN;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
 import com.mandiri.entities.dtos.PaylaterDetailDto;
-import com.mandiri.entities.models.Employee;
-import com.mandiri.entities.models.PaylaterDetail;
-import com.mandiri.repositories.EmployeeRepository;
-import com.mandiri.services.EmployeeService;
 import com.mandiri.services.PaylaterDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.itextpdf.text.BaseColor;
@@ -33,9 +27,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import org.yaml.snakeyaml.events.Event;
-
-import javax.swing.plaf.synth.ColorType;
+import org.springframework.web.server.ResponseStatusException;
 
 @Component
 public class PDFGenerator{
@@ -101,11 +93,10 @@ public class PDFGenerator{
     }
 
     private void addLogo(Document document,String imageName) {
-        System.out.println(imageName);
         try {
             Image img = Image.getInstance(logoImgPath);
             if (imageName != null){
-                Image img2 = Image.getInstance("D:/"+imageName+".png");
+                Image img2 = Image.getInstance("D:\\logo\\"+imageName);
                 img2.scalePercent(3, 5);
                 img2.setAlignment(Element.ALIGN_CENTER);
                 document.add(img2);
@@ -128,7 +119,7 @@ public class PDFGenerator{
 
     public void addDocTitle(Document document,String id) throws DocumentException {
 
-        PaylaterDetailDto paylaterDetail = paylaterDetailService.getAllPayment(id);
+        PaylaterDetailDto paylaterDetail = paylaterDetailService.getAllPaymentById(id);
 
         Paragraph p1 = new Paragraph();
         Paragraph title = new Paragraph();
@@ -171,7 +162,7 @@ public class PDFGenerator{
 
     private void getDbData(PdfPTable table,String id) {
 
-        PaylaterDetailDto paylaterDetailDto = paylaterDetailService.getAllPayment(id);
+        PaylaterDetailDto paylaterDetailDto = paylaterDetailService.getAllPaymentById(id);
 
         table.setWidthPercentage(100);
         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -220,14 +211,6 @@ public class PDFGenerator{
     }
 
     private void addFooter(Document document) throws DocumentException {
-//        Paragraph p2 = new Paragraph();
-//        leaveEmptyLine(p2, 3);
-//        p2.setAlignment(Element.ALIGN_CENTER);
-//        p2.add(new Paragraph("Livin By Mandiri",
-//                COURIER_SMALL_FOOTER));
-//
-//        document.add(p2);
-
         try {
             Image img = Image.getInstance(logoFooter);
             img.scalePercent(25, logoImgScale[1]);

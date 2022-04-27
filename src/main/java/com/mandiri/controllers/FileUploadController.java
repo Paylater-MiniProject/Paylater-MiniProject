@@ -19,9 +19,9 @@ public class FileUploadController {
     FileUploadService fileUploadService;
 
 
-    @PostMapping("/{id}/file")
-    public void uploadFile(@PathVariable String id, @RequestPart(name = "file") MultipartFile fileImage) throws IOException {
-        fileUploadService.saveFile(id,fileImage);
+    @PostMapping("/logo")
+    public void uploadLogo(@RequestPart(name = "file") MultipartFile fileImage) throws IOException {
+        fileUploadService.saveFile(fileImage);
     }
 
     @GetMapping("/export")
@@ -38,6 +38,9 @@ public class FileUploadController {
         fileUploadService.modifyFilePdf(response);
     }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> c025d95f17570a4328a11f4ae3e0af16498cf62c
 }

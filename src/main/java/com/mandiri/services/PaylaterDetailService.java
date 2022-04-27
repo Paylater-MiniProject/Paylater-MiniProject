@@ -1,6 +1,5 @@
 package com.mandiri.services;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mandiri.constant.ResponseMessage;
 import com.mandiri.entities.dtos.PaylaterDetailDto;
 import com.mandiri.entities.dtos.PaylaterSaveDto;
@@ -29,7 +28,7 @@ public class PaylaterDetailService{
     @Autowired
     ProductService productService;
 
-    public PaylaterDetailDto getAllPayment(String id){
+    public PaylaterDetailDto getAllPaymentById(String id){
         return paylaterDetailRepository.findAllDetailById(id);
     }
 
