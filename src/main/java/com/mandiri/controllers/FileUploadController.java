@@ -37,10 +37,4 @@ public class FileUploadController {
 
         fileUploadService.modifyFilePdf(response);
     }
-
-<<<<<<< HEAD
-
-
-=======
->>>>>>> c025d95f17570a4328a11f4ae3e0af16498cf62c
 }
