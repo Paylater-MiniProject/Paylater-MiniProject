@@ -25,8 +25,8 @@ public class FileUploadService {
     @Autowired
     FileUploadRepository fileUploadRepository;
 
-    public void saveFile(String id,MultipartFile multipartFile) throws IOException {
-
+    public void saveFile(MultipartFile multipartFile) throws IOException {
+        String fileName = multipartFile.getOriginalFilename();
         FileUpload file = new FileUpload();
         List<String> allowedExtension = new ArrayList<>();
         allowedExtension.add("pdf");
@@ -38,10 +38,10 @@ public class FileUploadService {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"Extension cannot upload");
         }
 
-        File filePhysical = new File(pathFile+id+"."+extension);
+        File filePhysical = new File(pathFile+fileName+"."+extension);
         multipartFile.transferTo(filePhysical);
 
-        file.setFileName(id);
+        file.setFileName(fileName);
         file.setFileExtension(extension);
 
         fileUploadRepository.save(file);

@@ -81,7 +81,7 @@ public class PDFPayLaterMonthlyGenerator {
 
     public void addDocTitle(Document document,String id) throws DocumentException {
 
-        PaylaterDetailDto payment = detailService.getAllPayment(id);
+        PaylaterDetailDto payment = detailService.getAllPaymentById(id);
 
         Paragraph p1 = new Paragraph();
         leaveEmptyLine(p1, 1);
@@ -119,11 +119,12 @@ public class PDFPayLaterMonthlyGenerator {
 
     private void getDbData(PdfPTable table,String id) {
 
-        PaylaterDetailDto payment = detailService.getAllPayment(id);
+        PaylaterDetailDto payment = detailService.getAllPaymentById(id);
 
         table.setWidthPercentage(100);
         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
         table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+        table.getDefaultCell().setBorder(2);
 
         table.addCell("Total Tagihan");
         table.addCell("+" + payment.getInstallmentPay().toString());

@@ -26,23 +26,22 @@ public class PaylaterDetailController {
     }
 
     @GetMapping
-    public PaylaterDetailDto getAll (@RequestParam String id){
-        return paylaterDetailService.getAllPayment(id);
+    public PaylaterDetailDto getAllById (@RequestParam String id){
+        return paylaterDetailService.getAllPaymentById(id);
     }
 
     @PutMapping
-    public PaylaterDetailDto paymentPerMonth(@RequestBody PaymentPerMonthDto perMonthDto){
+    public PaylaterDetailDto summaryPerMonth(@RequestBody PaymentPerMonthDto perMonthDto){
         return paylaterDetailService.update(perMonthDto);
     }
 
     @GetMapping("/{id}/{imageName}/export")
-    public void getEmployeePdf(@PathVariable String id,@PathVariable String imageName) {
+    public void getPaymentDetailPdf(@PathVariable String id,@PathVariable String imageName) {
         pdfGenerator.generatePdfReport(id, imageName);
     }
 
-    //Update 26 April 2022
     @GetMapping("{id}/pdf")
-    public void getPayLaterMonthly(@PathVariable String id){
+    public void getPayLaterMonthlyPdf(@PathVariable String id){
         payLaterMonthlyGenerator.generatePdfReport(id);
     }
 

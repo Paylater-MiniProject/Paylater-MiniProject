@@ -16,7 +16,6 @@ import org.apache.pdfbox.pdfwriter.ContentStreamWriter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDStream;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +29,7 @@ public class PDFEditor {
     }
 
     public void editPdf(String fileName,String name,String address,String id) throws IOException {
-        paylaterDetailService.getAllPayment(id);
+        paylaterDetailService.getAllPaymentById(id);
 
         PDDocument document = null;
         document = PDDocument.load(new File("C:/Users/fajri/upload-image/"+fileName+".pdf"));

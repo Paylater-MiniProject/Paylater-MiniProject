@@ -19,9 +19,9 @@ public class FileUploadController {
     FileUploadService fileUploadService;
 
 
-    @PostMapping("/{id}/file")
-    public void uploadFile(@PathVariable String id, @RequestPart(name = "file") MultipartFile fileImage) throws IOException {
-        fileUploadService.saveFile(id,fileImage);
+    @PostMapping("/logo")
+    public void uploadLogo(@RequestPart(name = "file") MultipartFile fileImage) throws IOException {
+        fileUploadService.saveFile(fileImage);
     }
 
     @GetMapping("/export")
@@ -36,10 +36,6 @@ public class FileUploadController {
         response.setHeader(headerKey,headerValue);
 
         fileUploadService.modifyFilePdf(response);
-    }
-
-    @GetMapping("/generateinvoice/{id}")
-    public void readFile(@PathVariable String id){
     }
 
 }
