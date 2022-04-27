@@ -38,8 +38,6 @@ public class FileUploadController {
         fileUploadService.modifyFilePdf(response);
     }
 
-    @GetMapping("/generateinvoice/{id}")
-    public void readFile(@PathVariable String id){
-    }
+
 
 }
