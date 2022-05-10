@@ -94,6 +94,9 @@ public class PaylaterDetailService{
 
         Installment installment = installmentService.getById(id);
         installment.setId(id);
+        if(installment.getIsDone().equals(true)){
+            throw new ResponseStatusException(HttpStatus.ACCEPTED, "SUDAH LUNAS");
+        }
 
         if(perMonthDto.getInstallmentPay().equals(detailDto.getInstallmentPay())){
             paidOffValidation(installment);
@@ -102,6 +105,7 @@ public class PaylaterDetailService{
         }
         installmentService.saveInstallment(installment);
         detailDto.setCurrentInstallment(installment.getCurrentInstallment());
+        detailDto.setStatus(installment.getStatus());
 
         return detailDto;
     }
@@ -112,9 +116,6 @@ public class PaylaterDetailService{
         if(paidOffTotal.equals(installment.getTotalInstallment())){
             installment.setStatus("Lunas");
             installment.setIsDone(true);
-        }
-        if(installment.getIsDone().equals(true)){
-            throw new ResponseStatusException(HttpStatus.ACCEPTED, "SUDAH LUNAS");
         }
         else{
             installment.setStatus("Belum Lunas");
