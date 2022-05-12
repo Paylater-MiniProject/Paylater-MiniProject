@@ -6,6 +6,8 @@ import com.mandiri.entities.dtos.PaymentPerMonthDto;
 import com.mandiri.generator.PDFGenerator;
 import com.mandiri.generator.PDFPayLaterMonthlyGenerator;
 import com.mandiri.services.PaylaterDetailService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,12 +45,12 @@ public class PaylaterDetailController {
         return paylaterDetailService.update(perMonthDto);
     }
 
-    @GetMapping("/{id}/{imageName}/export")
-    public void getPaymentDetailPdf(@PathVariable String id,@PathVariable String imageName) {
-        pdfGenerator.generatePdfReport(id, imageName);
+    @GetMapping("/{id}/{idImg}/export")
+    public void getPaymentDetailPdf(@PathVariable String id,@PathVariable String idImg) {
+        pdfGenerator.generatePdfReport(id, idImg);
     }
 
-    @GetMapping("{id}/pdf")
+    @GetMapping("/{id}/pdf")
     public void getSummaryPdf(@PathVariable String id){
         payLaterMonthlyGenerator.generatePdfReport(id);
     }

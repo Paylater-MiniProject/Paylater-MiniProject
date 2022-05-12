@@ -18,8 +18,8 @@ public class FileUploaderController {
     FileUploaderService fileUploaderService;
 
 
-    @PostMapping("/fileUpload")
-    public String uploadFiles(@RequestParam("files")MultipartFile[] files){
+    @PostMapping(value = "/fileUpload", consumes = "multipart/form-data")
+    public String uploadFiles(@RequestPart("files")MultipartFile[] files){
         for (MultipartFile file:files){
             fileUploaderService.saveFile(file);
         }

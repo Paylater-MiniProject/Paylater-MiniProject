@@ -2,6 +2,7 @@ package com.mandiri.blobExample.entity;
 
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -16,18 +17,20 @@ public class FileUploader {
     private String id;
 
     @Lob
-    @Column(name = "data", columnDefinition="BLOB")
+    @Column(name = "data")
+    @Type(type="org.hibernate.type.BinaryType")
     private byte[] data;
 
     private String fileName;
     private String fileType;
 
-    public FileUploader() {
-    }
-
     public FileUploader(byte[] data, String fileName, String fileType) {
         this.data = data;
         this.fileName = fileName;
         this.fileType = fileType;
+    }
+
+    public FileUploader(){
+
     }
 }

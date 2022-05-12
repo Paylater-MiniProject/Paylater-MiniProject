@@ -14,9 +14,8 @@ public class ModifyController {
 
     @GetMapping("{fileName}/export")
     public void modifyPdf(@PathVariable String fileName,
-                          @RequestParam String name,
-                          String address,
+                          @RequestParam String userId,
                           String id) throws IOException {
-        pdfEditor.editPdf(fileName,name,address,id);
+        pdfEditor.editPdf(fileName, userId, id);
     }
 }

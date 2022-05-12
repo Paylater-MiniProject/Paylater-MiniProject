@@ -1,6 +1,7 @@
 package com.mandiri.editor;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -8,8 +9,11 @@ import java.util.Optional;
 
 import com.mandiri.blobExample.entity.FileUploader;
 import com.mandiri.blobExample.service.FileUploaderService;
+import com.mandiri.entities.dtos.PaylaterDetailDto;
+import com.mandiri.entities.models.User;
 import com.mandiri.generator.PDFGenerator;
 import com.mandiri.services.PaylaterDetailService;
+import com.mandiri.services.UserServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.cos.COSArray;
@@ -46,25 +50,24 @@ public class PDFEditor {
     public PDFEditor(){
     }
 
-    public void editPdf(String fileName,String name,String address,String id) throws IOException {
-        paylaterDetailService.getAllPaymentById(id);
-        Optional<FileUploader> fileEntityOptional = fileUploaderService.getFile(fileName);
-        FileUploader file = fileEntityOptional.get();
+    @Autowired
+    UserServiceImpl userService;
 
+    public void editPdf(String fileName,String userId,String id) throws IOException {
+        PaylaterDetailDto detailDto = paylaterDetailService.getAllPaymentById(id);
+/*        Optional<FileUploader> fileEntityOptional = fileUploaderService.getFile(fileName);
+        FileUploader file = fileEntityOptional.get();*/
+
+        User user = userService.getUserById(userId);
         PDFont font = PDType1Font.TIMES_ROMAN;
 
 
         PDDocument document = null;
-<<<<<<< HEAD
-        //document = PDDocument.load(new File("C:/Users/fajri/upload-image/"+fileName));
-        document = PDDocument.load(file.getData());
-=======
         document = PDDocument.load(new File(pdfDir+fileName+".pdf"));
->>>>>>> 48e6cabe7ef4a4825171e1b67f57af61ef753b85
-        document = replaceText(document, "Name", "Name              : " + name);
-        document = replaceText(document, "Address", "Address           : "+ address);
+        document = replaceText(document, "Name", "Name              : " + user.getName());
+        document = replaceText(document, "NIK", "NIK              : " + user.getNik());
+        document = replaceText(document, "Address", "Address           : "+ user.getAddress());
         document = replaceText(document, "Transaction id", "TransactionId     : "+ id);
-        //document = replaceText(document, "Transaction id" , );
         tableAddCell(document,1000, font);
         document.save("D:/"+fileName+"-modify.pdf");
         document.close();
