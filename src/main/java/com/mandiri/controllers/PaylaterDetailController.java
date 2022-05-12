@@ -11,6 +11,8 @@ import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/paylater")
 public class PaylaterDetailController {
@@ -41,13 +43,13 @@ public class PaylaterDetailController {
         return paylaterDetailService.update(perMonthDto);
     }
 
-    @GetMapping("/{id}/{imageName}/export")
+    @GetMapping("/{id}/{idImg}/export")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public void getPaymentDetailPdf(@PathVariable String id,@PathVariable String imageName) {
-        pdfGenerator.generatePdfReport(id, imageName);
+    public void getPaymentDetailPdf(@PathVariable String id,@PathVariable String idImg) {
+        pdfGenerator.generatePdfReport(id, idImg);
     }
 
-    @GetMapping("{id}/pdf")
+    @GetMapping("/{id}/pdf")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public void getSummaryPdf(@PathVariable String id){
         payLaterMonthlyGenerator.generatePdfReport(id);

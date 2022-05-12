@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PaylaterDetailService{
@@ -43,7 +44,6 @@ public class PaylaterDetailService{
 
         paylaterDetail.setId(product.getId());
         paylaterDetail.setInstallmentPay(detail.getInstallmentPay());
-        paylaterDetail.setUserId(detail.getUserId());
 
         return paylaterDetail;
     }
@@ -56,7 +56,6 @@ public class PaylaterDetailService{
         detail.setQuantity(paylaterDetail.getQuantity());
         detail.setTransactionAmount((paylaterDetail.getQuantity()* paylaterDetail.getPrice()) + detail.getHandlingFee());
         detail.setInstallmentPay(detail.getTransactionAmount()/ saveInstallment.getTotalInstallment());
-        detail.setUserId(paylaterDetail.getUserId());
 
         paylaterDetailRepository.save(detail);
         return detail;
@@ -130,5 +129,9 @@ public class PaylaterDetailService{
             throw  new ResponseStatusException(HttpStatus.NOT_FOUND,
                     ResponseMessage.getResourceNotFound(PaylaterDetail.class.getSimpleName(), id));
         }
+    }
+
+    public List<PaylaterDetailDto> getAll() {
+        return paylaterDetailRepository.findAllDetail();
     }
 }

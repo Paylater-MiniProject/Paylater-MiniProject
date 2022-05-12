@@ -1,8 +1,6 @@
 package com.mandiri.controllers;
 
 import com.mandiri.services.FileUploadService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,9 +18,22 @@ public class FileUploadController {
     @Autowired
     FileUploadService fileUploadService;
 
+
     @PostMapping("/logo")
-    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public void uploadLogo(@RequestPart(name = "file") MultipartFile fileImage) throws IOException {
         fileUploadService.saveFile(fileImage);
+    }
+
+    @GetMapping("/export")
+    public void generatePdf(HttpServletResponse response) throws IOException {
+        response.setContentType("application/pdf");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+        String currentDate = dateFormat.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment: filename = pdf_"+currentDate+".pdf";
+
+        response.setHeader(headerKey,headerValue);
+        fileUploadService.modifyFilePdf(response);
     }
 }

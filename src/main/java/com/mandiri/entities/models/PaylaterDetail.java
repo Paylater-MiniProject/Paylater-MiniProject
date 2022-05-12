@@ -16,7 +16,6 @@ public class PaylaterDetail {
     private Date createdTime;
     private Double transactionAmount;
     private Double installmentPay; //per bulan
-    private String userId;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id")

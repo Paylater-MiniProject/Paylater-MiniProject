@@ -53,6 +53,7 @@ public class UserController {
     public Role saveRole(@RequestBody Role role){
         return userService.saveRole(role);
     }
+
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);

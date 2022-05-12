@@ -1,5 +1,6 @@
 package com.mandiri.generator;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,7 +9,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
+import com.mandiri.blobExample.entity.FileUploader;
+import com.mandiri.blobExample.service.FileUploaderService;
 import com.mandiri.entities.dtos.PaylaterDetailDto;
 import com.mandiri.services.PaylaterDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,18 +70,21 @@ public class PDFGenerator{
     @Autowired
     PaylaterDetailService paylaterDetailService;
 
+    @Autowired
+    FileUploaderService fileUploaderService;
+
     private static Font COURIER = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
     private static Font COURIER_SMALL = new Font(Font.FontFamily.COURIER, 12, Font.NORMAL);
     private static Font COURIER_SMALL_FOOTER = new Font(Font.FontFamily.COURIER, 8, Font.BOLD);
 
-    public void generatePdfReport(String id,String imageName) {
+    public void generatePdfReport(String id,String idImg) {
 
         Document document = new Document();
 
         try {
             PdfWriter.getInstance(document, new FileOutputStream(getPdfNameWithDate(id)));
             document.open();
-            addLogo(document,imageName);
+            addLogo(document,idImg);
             addDocTitle(document,id);
             createTable(document,noOfColumns,id);
             addParagraph(document);
@@ -92,11 +99,13 @@ public class PDFGenerator{
 
     }
 
-    private void addLogo(Document document,String imageName) {
+    private void addLogo(Document document,String idImg) {
         try {
             Image img = Image.getInstance(logoImgPath);
-            if (imageName != null){
-                Image img2 = Image.getInstance("D:\\logo\\"+imageName);
+            Optional<FileUploader> fileUploader = fileUploaderService.getFile(idImg);
+            FileUploader uploader = fileUploader.get();
+            if (uploader.getFileName() != null){
+                Image img2 = Image.getInstance(uploader.getData());
                 img2.scalePercent(3, 5);
                 img2.setAlignment(Element.ALIGN_CENTER);
                 document.add(img2);
@@ -111,6 +120,7 @@ public class PDFGenerator{
             img.setAlignment(Element.ALIGN_RIGHT);
 
             document.add(img);
+            document.isInline();
         } catch (DocumentException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -138,7 +148,7 @@ public class PDFGenerator{
 
     }
 
-    private void createTable(Document document, int noOfColumns,String id) throws DocumentException {
+    public void createTable(Document document, int noOfColumns,String id) throws DocumentException {
         Paragraph paragraph = new Paragraph();
         leaveEmptyLine(paragraph, 3);
         document.add(paragraph);
@@ -168,6 +178,7 @@ public class PDFGenerator{
         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
         table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.getDefaultCell().setBorder(2);
+        table.getDefaultCell().setBorderColor(BaseColor.GRAY);
 
         table.addCell("Cicilan");
         table.addCell(String.valueOf(paylaterDetailDto.getCurrentInstallment() + 1));

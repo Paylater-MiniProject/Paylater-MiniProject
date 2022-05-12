@@ -21,7 +21,6 @@ public class PaylaterDetailDto {
     @JsonFormat(pattern = "dd-MMMM-yyyy")
     private Date dueDate;
     private Double installmentPay;
-    private String userId;
 
     public PaylaterDetailDto(String id, Double transactionAmount, Double handlingFee, Integer currentInstallment, Date createdTime, String productName, Integer totalInstallment, Double price,  String status, Date dueDate, Integer totalProduct, Double installmentPay) {
         this.id = id;
