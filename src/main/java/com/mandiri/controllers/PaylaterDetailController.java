@@ -39,7 +39,7 @@ public class PaylaterDetailController {
     }
 
     @PutMapping
-    public PaylaterDetailDto summaryPerMonth(@RequestBody PaymentPerMonthDto perMonthDto){
+    public PaylaterDetailDto doPaymentPerMonth(@RequestBody PaymentPerMonthDto perMonthDto){
         return paylaterDetailService.update(perMonthDto);
     }
 
@@ -49,7 +49,7 @@ public class PaylaterDetailController {
     }
 
     @GetMapping("{id}/pdf")
-    public void getPayLaterMonthlyPdf(@PathVariable String id){
+    public void getSummaryPdf(@PathVariable String id){
         payLaterMonthlyGenerator.generatePdfReport(id);
     }
 

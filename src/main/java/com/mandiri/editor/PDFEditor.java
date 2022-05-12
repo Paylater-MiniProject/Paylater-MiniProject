@@ -32,6 +32,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class PDFEditor {
 
+    @Value("${pdfDir}")
+    private String pdfDir;
+
     @Autowired
     PaylaterDetailService paylaterDetailService;
 
@@ -52,8 +55,12 @@ public class PDFEditor {
 
 
         PDDocument document = null;
+<<<<<<< HEAD
         //document = PDDocument.load(new File("C:/Users/fajri/upload-image/"+fileName));
         document = PDDocument.load(file.getData());
+=======
+        document = PDDocument.load(new File(pdfDir+fileName+".pdf"));
+>>>>>>> 48e6cabe7ef4a4825171e1b67f57af61ef753b85
         document = replaceText(document, "Name", "Name              : " + name);
         document = replaceText(document, "Address", "Address           : "+ address);
         document = replaceText(document, "Transaction id", "TransactionId     : "+ id);

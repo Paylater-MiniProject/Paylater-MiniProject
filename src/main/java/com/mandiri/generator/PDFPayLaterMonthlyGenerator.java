@@ -15,9 +15,12 @@ import org.springframework.stereotype.Component;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class PDFPayLaterMonthlyGenerator {
@@ -93,9 +96,11 @@ public class PDFPayLaterMonthlyGenerator {
         p1.setAlignment(Element.ALIGN_MIDDLE);
         leaveEmptyLine(p1, 1);
 
-        p1.add(new Paragraph("Total Transaksi: " + payment.getCurrentInstallment() + "/" + payment.getTotalInstallment(), COURIER_SMALL));
-        p1.add(new Paragraph("Created Date: " + payment.getCreatedTime(), COURIER_SMALL));
-        p1.add(new Paragraph("Due Date: " + payment.getDueDate(), COURIER_SMALL));
+        SimpleDateFormat DateFor = new SimpleDateFormat("dd/MM/yyyy");
+        String createdTime = DateFor.format(payment.getCreatedTime());
+        String dueDate = DateFor.format(payment.getDueDate());
+
+        p1.add(new Paragraph("Date: " + createdTime + " - " + dueDate, COURIER_SMALL));
 
         document.add(p1);
     }
@@ -126,14 +131,15 @@ public class PDFPayLaterMonthlyGenerator {
         table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.getDefaultCell().setBorder(2);
 
-        table.addCell("Total Tagihan");
-        table.addCell("+" + payment.getInstallmentPay().toString());
+        table.addCell("Transaksi Ke-");
+        table.addCell(payment.getCurrentInstallment() + "/" + payment.getTotalInstallment());
 
-        table.addCell("Total Pembayaran");
-        table.addCell("-" + payment.getInstallmentPay().toString());
+        table.addCell("Cicilan Perbulan: ");
+        table.addCell("+" + NumberFormat.getCurrencyInstance(new Locale("in","ID")).format(payment.getInstallmentPay().intValue()));
 
-        table.addCell("Cicilan: " + payment.getProductName().toString());
-        table.addCell("+" + payment.getInstallmentPay().toString());
+        table.addCell("Produk Cicilan: ");
+        table.addCell(payment.getProductName());
+
 
     }
 
@@ -141,10 +147,6 @@ public class PDFPayLaterMonthlyGenerator {
         Paragraph p2 = new Paragraph();
         leaveEmptyLine(p2, 3);
         p2.setAlignment(Element.ALIGN_MIDDLE);
-        p2.add(new Paragraph(
-                "------------------------End Of " +reportFileName+"------------------------",
-                COURIER_SMALL_FOOTER));
-
         document.add(p2);
     }
 
