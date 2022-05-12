@@ -4,8 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Optional;
 
+import com.mandiri.entities.dtos.PaylaterDetailDto;
+import com.mandiri.entities.models.PaylaterDetail;
+import com.mandiri.entities.models.User;
 import com.mandiri.services.PaylaterDetailService;
+import com.mandiri.services.UserServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.cos.COSArray;
@@ -29,16 +34,22 @@ public class PDFEditor {
     @Autowired
     PaylaterDetailService paylaterDetailService;
 
+    @Autowired
+    UserServiceImpl userService;
+
     public PDFEditor(){
     }
 
-    public void editPdf(String fileName,String name,String address,String id) throws IOException {
-        paylaterDetailService.getAllPaymentById(id);
+    public void editPdf(String fileName,String userId,String id) throws IOException {
+        PaylaterDetailDto paylaterDetail = paylaterDetailService.getAllPaymentById(id);
+
+        User user = userService.getUserById(paylaterDetail.getUserId());
 
         PDDocument document = null;
         document = PDDocument.load(new File(pdfDir+fileName+".pdf"));
-        document = replaceText(document, "Name", "Name              : " + name);
-        document = replaceText(document, "Address", "Address           : "+ address);
+        document = replaceText(document, "Name", "Name              : " + user.getName());
+        document = replaceText(document, "Address", "Address           : "+ user.getAddress());
+        document = replaceText(document, "Address", "Email           : "+ user.getEmail());
         document = replaceText(document, "Transaction id", "TransactionId     : "+ id);
         document.save("D:/"+fileName+"-modify.pdf");
         document.close();

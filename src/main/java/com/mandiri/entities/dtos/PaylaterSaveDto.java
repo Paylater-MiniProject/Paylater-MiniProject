@@ -10,4 +10,5 @@ public class PaylaterSaveDto {
     private Double price;
     private Integer quantity;
     private Double installmentPay;
+    private String userId;
 }

@@ -43,6 +43,7 @@ public class PaylaterDetailService{
 
         paylaterDetail.setId(product.getId());
         paylaterDetail.setInstallmentPay(detail.getInstallmentPay());
+        paylaterDetail.setUserId(detail.getUserId());
 
         return paylaterDetail;
     }
@@ -55,6 +56,7 @@ public class PaylaterDetailService{
         detail.setQuantity(paylaterDetail.getQuantity());
         detail.setTransactionAmount((paylaterDetail.getQuantity()* paylaterDetail.getPrice()) + detail.getHandlingFee());
         detail.setInstallmentPay(detail.getTransactionAmount()/ saveInstallment.getTotalInstallment());
+        detail.setUserId(paylaterDetail.getUserId());
 
         paylaterDetailRepository.save(detail);
         return detail;
