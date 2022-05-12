@@ -38,7 +38,7 @@ public class FileUploadService {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"Extension cannot upload");
         }
 
-        File filePhysical = new File(pathFile+fileName+"."+extension);
+        File filePhysical = new File(pathFile + fileName+"."+extension);
         multipartFile.transferTo(filePhysical);
 
         file.setFileName(fileName);

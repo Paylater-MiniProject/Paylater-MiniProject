@@ -34,7 +34,6 @@ public class FileUploadController {
         String headerValue = "attachment: filename = pdf_"+currentDate+".pdf";
 
         response.setHeader(headerKey,headerValue);
-
         fileUploadService.modifyFilePdf(response);
     }
 }

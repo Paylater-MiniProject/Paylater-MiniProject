@@ -9,6 +9,8 @@ import com.mandiri.services.PaylaterDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/paylater")
 public class PaylaterDetailController {
@@ -20,6 +22,7 @@ public class PaylaterDetailController {
 
     @Autowired
     PDFPayLaterMonthlyGenerator payLaterMonthlyGenerator;
+
     @PostMapping
     public PaylaterSaveDto save (@RequestBody PaylaterSaveDto detailDto){
         return paylaterDetailService.savePayment(detailDto);
@@ -28,6 +31,11 @@ public class PaylaterDetailController {
     @GetMapping
     public PaylaterDetailDto getAllById (@RequestParam String id){
         return paylaterDetailService.getAllPaymentById(id);
+    }
+
+    @GetMapping("all")
+    public List<PaylaterDetailDto> getAllPayLater(){
+        return paylaterDetailService.getAll();
     }
 
     @PutMapping

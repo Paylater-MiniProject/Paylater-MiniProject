@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PaylaterDetailService{
@@ -127,5 +128,9 @@ public class PaylaterDetailService{
             throw  new ResponseStatusException(HttpStatus.NOT_FOUND,
                     ResponseMessage.getResourceNotFound(PaylaterDetail.class.getSimpleName(), id));
         }
+    }
+
+    public List<PaylaterDetailDto> getAll() {
+        return paylaterDetailRepository.findAllDetail();
     }
 }
