@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class PaylaterSaveDto {
     private String id;
-    private String productName;
+    private String productId;
     private Integer totalInstallment;
-    private Double price;
     private Integer quantity;
     private Double installmentPay;
+
 }

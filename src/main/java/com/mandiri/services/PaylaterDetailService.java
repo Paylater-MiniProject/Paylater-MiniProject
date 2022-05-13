@@ -7,6 +7,7 @@ import com.mandiri.entities.dtos.PaymentPerMonthDto;
 import com.mandiri.entities.models.Installment;
 import com.mandiri.entities.models.PaylaterDetail;
 import com.mandiri.entities.models.Product;
+import com.mandiri.entities.models.ProductDetail;
 import com.mandiri.repositories.PaylaterDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,9 @@ public class PaylaterDetailService{
     @Autowired
     ProductService productService;
 
+    @Autowired
+    ProductDetailService productDetailService;
+
     public PaylaterDetailDto getAllPaymentById(String id){
         return paylaterDetailRepository.findAllDetailById(id);
     }
@@ -45,6 +49,7 @@ public class PaylaterDetailService{
         paylaterDetail.setId(product.getId());
         paylaterDetail.setInstallmentPay(detail.getInstallmentPay());
 
+
         return paylaterDetail;
     }
 
@@ -52,9 +57,10 @@ public class PaylaterDetailService{
         PaylaterDetail detail = new PaylaterDetail();
         detail.setId(product.getId());
         detail.setCreatedTime(new Date(System.currentTimeMillis()));
-        detail.setHandlingFee(paylaterDetail.getQuantity()* paylaterDetail.getPrice()*0.11);
+        ProductDetail productDetail = saveProductDetail(paylaterDetail);
+        detail.setHandlingFee(paylaterDetail.getQuantity()* productDetail.getPrice()*0.11);
         detail.setQuantity(paylaterDetail.getQuantity());
-        detail.setTransactionAmount((paylaterDetail.getQuantity()* paylaterDetail.getPrice()) + detail.getHandlingFee());
+        detail.setTransactionAmount((paylaterDetail.getQuantity()* productDetail.getPrice()) + detail.getHandlingFee());
         detail.setInstallmentPay(detail.getTransactionAmount()/ saveInstallment.getTotalInstallment());
 
         paylaterDetailRepository.save(detail);
@@ -64,11 +70,20 @@ public class PaylaterDetailService{
     private Product toSaveProductClass(PaylaterSaveDto paylaterDetail, Installment installment) {
         Product saveProduct = new Product();
         saveProduct.setId(installment.getId());
-        saveProduct.setName(paylaterDetail.getProductName());
-        saveProduct.setPrice(paylaterDetail.getPrice());
-
+        ProductDetail productDetail = saveProductDetail(paylaterDetail);
+        productDetailService.addProduct(productDetail);
         Product product = productService.addProduct(saveProduct);
         return product;
+    }
+
+    private ProductDetail saveProductDetail(PaylaterSaveDto paylaterDetail) {
+        ProductDetail saveProductDetail=productDetailService.getById(paylaterDetail.getProductId());
+        ProductDetail productDetail= new ProductDetail();
+
+        productDetail.setName(saveProductDetail.getName());
+        productDetail.setPrice(saveProductDetail.getPrice());
+        productDetail.setDescription(saveProductDetail.getDescription());
+        return productDetail;
     }
 
     private Installment toSaveInstallmentClass(PaylaterSaveDto paylaterDetail) {

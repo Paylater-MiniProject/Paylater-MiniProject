@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -16,5 +16,9 @@ public class ProductService {
     @Transactional
     public Product addProduct(Product product){
         return productRepository.save(product);
+    }
+
+    public Optional<Product> getById(String id){
+        return productRepository.findById(id);
     }
 }
