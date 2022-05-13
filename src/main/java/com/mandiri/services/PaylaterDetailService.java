@@ -2,6 +2,7 @@ package com.mandiri.services;
 
 import com.mandiri.constant.ResponseMessage;
 import com.mandiri.entities.dtos.PaylaterDetailDto;
+import com.mandiri.entities.dtos.PaylaterResponsePaymentDto;
 import com.mandiri.entities.dtos.PaylaterSaveDto;
 import com.mandiri.entities.dtos.PaymentPerMonthDto;
 import com.mandiri.entities.models.Installment;
@@ -38,7 +39,7 @@ public class PaylaterDetailService{
     }
 
     @Transactional
-    public PaylaterSaveDto savePayment(PaylaterSaveDto paylaterDetail) {
+    public PaylaterResponsePaymentDto savePayment(PaylaterSaveDto paylaterDetail) {
         Installment saveInstallment = toSaveInstallmentClass(paylaterDetail);
         Installment installment = installmentService.saveInstallment(saveInstallment);
 
@@ -46,11 +47,17 @@ public class PaylaterDetailService{
 
         PaylaterDetail detail = toSavePaylaterDetailClass(paylaterDetail, saveInstallment, product);
 
-        paylaterDetail.setId(product.getId());
-        paylaterDetail.setInstallmentPay(detail.getInstallmentPay());
+        PaylaterResponsePaymentDto responsePaymentDto = new PaylaterResponsePaymentDto();
+        responsePaymentDto.setId(detail.getId());
+        responsePaymentDto.setInstallmentPay(detail.getInstallmentPay());
+        responsePaymentDto.setProductId(product.getId());
+        responsePaymentDto.setProductName(product.getName());
+        responsePaymentDto.setPrice(product.getPrice());
+        responsePaymentDto.setQuantity(detail.getQuantity());
+        responsePaymentDto.setTotalInstallment(installment.getTotalInstallment());
 
 
-        return paylaterDetail;
+        return responsePaymentDto;
     }
 
     private PaylaterDetail toSavePaylaterDetailClass(PaylaterSaveDto paylaterDetail, Installment saveInstallment, Product product) {
@@ -70,8 +77,10 @@ public class PaylaterDetailService{
     private Product toSaveProductClass(PaylaterSaveDto paylaterDetail, Installment installment) {
         Product saveProduct = new Product();
         saveProduct.setId(installment.getId());
-        ProductDetail productDetail = saveProductDetail(paylaterDetail);
-        productDetailService.addProduct(productDetail);
+
+        ProductDetail productDetail = productDetailService.getById(paylaterDetail.getProductId());
+        saveProduct.setName(productDetail.getName());
+        saveProduct.setPrice(productDetail.getPrice());
         Product product = productService.addProduct(saveProduct);
         return product;
     }

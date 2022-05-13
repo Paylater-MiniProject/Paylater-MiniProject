@@ -1,6 +1,7 @@
 package com.mandiri.controllers;
 
 import com.mandiri.entities.dtos.PaylaterDetailDto;
+import com.mandiri.entities.dtos.PaylaterResponsePaymentDto;
 import com.mandiri.entities.dtos.PaylaterSaveDto;
 import com.mandiri.entities.dtos.PaymentPerMonthDto;
 import com.mandiri.generator.PDFGenerator;
@@ -26,7 +27,7 @@ public class PaylaterDetailController {
     PDFPayLaterMonthlyGenerator payLaterMonthlyGenerator;
 
     @PostMapping
-    public PaylaterSaveDto save (@RequestBody PaylaterSaveDto detailDto){
+    public PaylaterResponsePaymentDto save (@RequestBody PaylaterSaveDto detailDto){
         return paylaterDetailService.savePayment(detailDto);
     }
 
